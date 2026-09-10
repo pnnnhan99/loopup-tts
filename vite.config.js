@@ -27,6 +27,22 @@ export default defineConfig({
           // Handle /api/models endpoint (Vietnamese models in tts-model/vi/)
           if (url === '/models' || url === '/models/') {
             try {
+              // Try to read from voices.json first
+              const voicesJsonPath = path.join(__dirname, 'public', 'tts-model', 'voices.json');
+              
+              if (fs.existsSync(voicesJsonPath)) {
+                const voicesData = JSON.parse(fs.readFileSync(voicesJsonPath, 'utf8'));
+                const models = Object.keys(voicesData)
+                  .map(key => voicesData[key].name)
+                  .filter(name => name && name.length > 0)
+                  .sort();
+                
+                res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+                res.end(JSON.stringify({ models }));
+                return;
+              }
+
+              // Fallback to old method: check tts-model/vi/ directory
               const modelsDir = path.join(__dirname, 'public', 'tts-model', 'vi');
 
               if (!fs.existsSync(modelsDir)) {
@@ -84,7 +100,29 @@ export default defineConfig({
           if (modelMatch) {
             try {
               const fileName = decodeURIComponent(modelMatch[1]);
-              const modelsDir = path.join(__dirname, 'public', 'tts-model', 'vi');
+              
+              // Try to determine language from model name or use voices.json
+              const voicesJsonPath = path.join(__dirname, 'public', 'tts-model', 'voices.json');
+              let modelsDir = path.join(__dirname, 'public', 'tts-model', 'vi'); // default to vi
+              
+              if (fs.existsSync(voicesJsonPath)) {
+                try {
+                  const voicesData = JSON.parse(fs.readFileSync(voicesJsonPath, 'utf8'));
+                  const modelName = fileName.replace(/\.onnx(\.json)?$/, '');
+                  
+                  // Find the model in voices.json to get its language
+                  for (const [key, voice] of Object.entries(voicesData)) {
+                    if (voice.name === modelName && voice.language?.code) {
+                      const langCode = voice.language.code.split('_')[0]; // en_US -> en
+                      modelsDir = path.join(__dirname, 'public', 'tts-model', langCode);
+                      break;
+                    }
+                  }
+                } catch (e) {
+                  console.error('Error reading voices.json for language detection:', e);
+                }
+              }
+              
               const filePath = path.join(modelsDir, fileName);
 
               // Security check: ensure file is within models directory

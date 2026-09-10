@@ -28,8 +28,8 @@ export const DEFAULT_LANG_MODELS = {
 
 /** Default model name to auto-load per language. If not set, first available model is used. */
 export const DEFAULT_MODEL = {
-  vi: 'Ngọc Huyền (mới)',   // null = use first available from /api/models
-  en: 'Libritts_r',
+  vi: 'lacphi',   // null = use first available from /api/models
+  en: null,   // use first available model
   id: 'Indo_goreng',   // null = use first available
 };
 

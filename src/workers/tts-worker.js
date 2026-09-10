@@ -5,9 +5,11 @@ let tts = null;
 // Initialize the model
 async function initializeModel(modelName = null) {
   try {
-    // Default to the original model if no model name provided
-    const defaultModel = 'en_US-libritts_r-medium';
-    const model = modelName || defaultModel;
+    // Use the provided model name or error if none provided
+    if (!modelName) {
+      throw new Error("No model name provided");
+    }
+    const model = modelName;
     // Encode to handle spaces or special characters in filenames
     const encodedModel = encodeURIComponent(model);
     

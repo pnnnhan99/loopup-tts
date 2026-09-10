@@ -12,9 +12,8 @@ import SpeedControl from '../components/SpeedControl.vue';
 import AudioChunk from '../components/AudioChunk.vue';
 import ModelSelector from '../components/ModelSelector.vue';
 import DemoTable from '../components/DemoTable.vue';
-import { fetchAvailableModels } from '../utils/model-detector.js';
 import { addEntry } from '../utils/history-store.js';
-import { DEFAULT_MODEL } from '../config.js';
+import { DEFAULT_MODEL, getModelsListUrl } from '../config.js';
 
 // State variables
 const text = ref(
@@ -145,7 +144,10 @@ const handleDemoTextClick = (demoText) => {
 const fetchModels = async () => {
   modelsLoading.value = true;
   try {
-    const models = await fetchAvailableModels();
+    const res = await fetch(getModelsListUrl('vi'));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const models = data.models || [];
     availableModels.value = models;
 
     if (selectedModel.value && selectedModel.value !== "None" && !models.includes(selectedModel.value)) {
