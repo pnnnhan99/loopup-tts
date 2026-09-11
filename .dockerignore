@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.github
+train
+public/tts-model
+public/asr-model
+public/vad-model
+*.md
+.hf
+.gitattributes
+.gitignore
+wrangler.toml
