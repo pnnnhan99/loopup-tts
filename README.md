@@ -1,3 +1,12 @@
+---
+title: Loopup TTS
+emoji: 🗣️
+colorFrom: purple
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # LOOPUP-TTS
 
 A browser-based Text-to-Speech and Speech Recognition application powered by Piper TTS, Sherpa-ONNX, and ONNX Runtime Web. Generate high-quality speech and transcribe audio directly in your browser without requiring a server for inference. Supports **Vietnamese** (home page), **other languages** (English, Indonesian), and **ASR** (Automatic Speech Recognition) on separate pages. Live demo: https://tts.loopup.io.vn
