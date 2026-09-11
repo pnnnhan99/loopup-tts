@@ -35,4 +35,10 @@ upload-model-web/*
 .cursor/*
 scraps/*
 .cursorignore
-public/tts-model/voices.json
+
+# Model files (served from R2 / Hugging Face Hub, not from git)
+public/tts-model/
+public/asr-model/
+public/vad-model/
+train/src/piper/tashkeel/model.onnx
+train/tests/*.onnx
